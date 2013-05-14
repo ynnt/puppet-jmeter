@@ -39,7 +39,7 @@ class jmeter(
     require => Exec['download-jmeter'],
   }
 
-  if $jmeter_plugins_install (  
+  if $jmeter_plugins_install {  
     exec { 'download-jmeter-plugins':
       command => 'wget -P /root http://jmeter-plugins.googlecode.com/files/JMeterPlugins-${jmeter_plugins_version}.zip',
       creates => '/root/JMeterPlugins-${jmeter_plugins_version}.zip'
@@ -51,5 +51,5 @@ class jmeter(
       creates => '/usr/share/jmeter/lib/ext/JMeterPlugins.jar',
       require => [Package['unzip'], Exec['install-jmeter'], Exec['download-jmeter-plugins']],
     }
-  )
+  }
 }
