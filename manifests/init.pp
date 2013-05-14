@@ -6,8 +6,18 @@
 #
 #   class { 'jmeter': }
 #
-class jmeter() {
-  package { 'openjdk-6-jre-headless':
+class jmeter(
+  $jmeter_version = '2.9',
+) {
+
+  Exec { path => '/bin:/usr/bin:/usr/sbin' }
+
+  $jdk_pkg = $::osfamily ? {
+    debian => 'openjdk-6-jre-headless',
+    redhat => 'java-1.6.0-openjdk'
+  }
+
+  package { $jdk_pkg:
     ensure => present,
   }
 
@@ -16,12 +26,12 @@ class jmeter() {
   }
 
   exec { 'download-jmeter':
-    command => 'wget -P /root http://mirrors.rackhosting.com/apache/jmeter/binaries/apache-jmeter-2.7.tgz',
-    creates => '/root/apache-jmeter-2.7.tgz'
+    command => "wget -P /root http://archive.apache.org/dist/jmeter/binaries/apache-jmeter-${jmeter_version}.tgz",
+    creates => "/root/apache-jmeter-${jmeter_version}.tgz"
   }
 
   exec { 'install-jmeter':
-    command => 'tar xzf /root/apache-jmeter-2.7.tgz && mv apache-jmeter-2.7 jmeter',
+    command => "tar xzf /root/apache-jmeter-${jmeter_version}.tgz && mv apache-jmeter-${jmeter_version} jmeter",
     cwd     => '/usr/share',
     creates => '/usr/share/jmeter',
     require => Exec['download-jmeter'],
