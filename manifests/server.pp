@@ -6,7 +6,7 @@
 #
 #   class { 'jmeter::server': }
 #
-class jmeter::server($server_ip = '33.33.33.10') {
+class jmeter::server($server_ip = '0.0.0.0') {
   include jmeter
 
   file { '/etc/init.d/jmeter':
