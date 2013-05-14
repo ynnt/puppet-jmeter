@@ -7,7 +7,9 @@
 #   class { 'jmeter': }
 #
 class jmeter(
-  $jmeter_version = '2.9',
+  $jmeter_version         = '2.9',
+  $jmeter_plugins_install = False,
+  $jmeter_plugins_version = '1.0.0',
 ) {
 
   Exec { path => '/bin:/usr/bin:/usr/sbin' }
@@ -37,15 +39,17 @@ class jmeter(
     require => Exec['download-jmeter'],
   }
 
-  exec { 'download-jmeter-plugins':
-    command => 'wget -P /root http://jmeter-plugins.googlecode.com/files/JMeterPlugins-0.5.4.zip',
-    creates => '/root/JMeterPlugins-0.5.4.zip'
-  }
+  if $jmeter_plugins_install (  
+    exec { 'download-jmeter-plugins':
+      command => 'wget -P /root http://jmeter-plugins.googlecode.com/files/JMeterPlugins-${jmeter_plugins_version}.zip',
+      creates => '/root/JMeterPlugins-${jmeter_plugins_version}.zip'
+    }
 
-  exec { 'install-jmeter-plugins':
-    command => 'unzip -q -d JMeterPlugins JMeterPlugins-0.5.4.zip && mv JMeterPlugins/JMeterPlugins.jar /usr/share/jmeter/lib/ext',
-    cwd     => '/root',
-    creates => '/usr/share/jmeter/lib/ext/JMeterPlugins.jar',
-    require => [Package['unzip'], Exec['install-jmeter'], Exec['download-jmeter-plugins']],
-  }
+    exec { 'install-jmeter-plugins':
+      command => "unzip -q -d JMeterPlugins JMeterPlugins-${jmeter_plugins_version}.zip && mv JMeterPlugins/JMeterPlugins.jar /usr/share/jmeter/lib/ext",
+      cwd     => '/root',
+      creates => '/usr/share/jmeter/lib/ext/JMeterPlugins.jar',
+      require => [Package['unzip'], Exec['install-jmeter'], Exec['download-jmeter-plugins']],
+    }
+  )
 }
