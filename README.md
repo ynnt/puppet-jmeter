@@ -3,7 +3,7 @@ Puppet JMeter
 
 This class installs the latest stable version of JMeter (currently v2.9) from apache.org. If you use the `::server` class, an init-file will be added to `/etc/init.d` and JMeter will be started in server mode listening on the default port.
 
-Both the `jmeter` and `jmeter::server` can will optionally install the `jmeter-plugins` package which adds a lot of useful listeners, thread groups, etc.
+Both the `jmeter` and `jmeter::server` can optionally install the `jmeter-plugins` package which adds a lot of useful listeners, thread groups, etc.
 
 The init script is based on the one available at https://gist.github.com/2830209.
 
