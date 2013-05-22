@@ -1,5 +1,5 @@
 name 'dduvnjak-jmeter'
-version '0.0.3'
+version '0.0.4'
 source 'git://github.com/dduvnjak/puppet-jmeter.git'
 author 'dduvnjak'
 license 'Apache 2.0'
