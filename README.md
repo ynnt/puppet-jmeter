@@ -41,4 +41,5 @@ Morten Wulff
 <wulff@ratatosk.net>
 
 Dario Duvnjak   
-[@darioduvnjak](https://twitter.com/darioduvnjak)
+[@darioduvnjak](https://twitter.com/darioduvnjak)   
+![r8networks logo](http://i.imgur.com/15kgvi0.png)
