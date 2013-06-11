@@ -1,0 +1,113 @@
+#!/bin/sh
+### BEGIN INIT INFO
+# chkconfig:         2345 85 15
+# Provides:          jmeter-server
+# Required-Start:    $syslog $local_fs
+# Required-Stop:     $syslog $local_fs
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: Apache JMeter Remote Server
+# Description:       Apache JMeter Remote Server runs JMeter tests issued from a remote server.
+### END INIT INFO
+
+# Author: Brian Flad <bflad417 at gmail dot com>
+
+# PATH should only include /usr/* if it runs after the mountnfs.sh script
+PATH=/sbin:/usr/sbin:/bin:/usr/bin
+DESC="Apache JMeter Remote Server"
+NAME=jmeter
+JMETER_PATH=/usr/share/jmeter
+# Change this to your IP
+RMI_HOST_DEF="-Djava.rmi.server.hostname=<%= @server_ip %>"
+SERVER_PORT=1099
+SERVER_CMD="$JMETER_PATH/bin/$NAME-server"
+PIDFILE=/var/run/$NAME.pid
+SCRIPTNAME=/etc/init.d/$NAME
+JAVA_PID=`ps ax --width=1000 | grep "[A]pacheJMeter.jar -Dserver_port=1099 -s"|awk '{printf $1 ""}'`
+
+# Source function library.
+. /etc/rc.d/init.d/functions
+
+# Source networking configuration.
+. /etc/sysconfig/network
+
+# Check that networking is up.
+[ ${NETWORKING} = "no" ] && exit 0
+
+[ -f $JMETER_PATH/bin/$NAME-server ] || exit 0
+[ -f $JMETER_PATH/bin/$NAME ] || exit 0
+
+#
+# Function that starts the daemon/service
+#
+do_start()
+{
+        [ -n "$JAVA_PID" ] && echo "$NAME already started" && exit 0
+        echo -n "Starting $NAME: "
+        $JMETER_PATH/bin/$NAME-server 2>&1 &
+        RETVAL=$?
+        MODE="normal"
+        echo "$NAME started in $MODE mode"
+        [ $RETVAL = 0 ] && touch /var/lock/subsys/$NAME
+}
+
+#
+# Function that stops the daemon/service
+#
+do_stop()
+{
+        [ -z "$JAVA_PID" ] && echo "$NAME already stopped" && exit 0
+        echo -n "Shutting down $NAME: "
+        kill $JAVA_PID
+        RETVAL=$?
+        echo
+        [ $RETVAL = 0 ] && rm -f /var/lock/subsys/$NAME
+}
+
+#
+# Function that gives status of daemon/server
+#
+do_status()
+{
+        if [ -n "$JAVA_PID" ]; then
+            MODE="RUNNING pid $JAVA_PID"
+            RETVAL=0
+        else
+            MODE="STOPPED"
+            RETVAL=1
+        fi
+        echo "$NAME is $MODE"
+}
+
+#
+# Function that stops and restarts daemon/server
+#
+do_restart()
+{
+        do_stop
+        do_start
+}
+
+case "$1" in
+  start)
+        do_start
+        ;;
+  stop)
+        do_stop
+        ;;
+  status)
+        do_status
+        ;;
+  restart|force-reload)
+        do_restart
+        ;;
+  condrestart)
+        [ -e /var/lock/subsys/$NAME ] && do_restart
+        ;;
+  *)
+        echo "Usage: $SCRIPTNAME {start|stop|status|restart|force-reload}" >&2
+        exit 3
+        ;;
+esac
+
+exit $RETVAL
