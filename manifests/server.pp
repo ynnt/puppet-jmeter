@@ -9,23 +9,30 @@
 class jmeter::server($server_ip = '0.0.0.0') {
   include jmeter
 
+  $init_template = $osfamily ? {
+    debian => 'jmeter/jmeter-init.erb',
+    redhat => 'jmeter/jmeter-init.redhat.erb'
+  }
+
   file { '/etc/init.d/jmeter':
-    content => template('jmeter/jmeter-init.erb'),
+    content => template($init_template),
     owner   => root,
     group   => root,
     mode    => 0755,
   }
 
-  exec { 'jmeter-update-rc':
-    command     => 'update-rc.d jmeter defaults',
-    subscribe   => File['/etc/init.d/jmeter'],
-    refreshonly => true,
+  if $osfamily == 'debian' {
+    exec { 'jmeter-update-rc':
+      command     => '/usr/sbin/update-rc.d jmeter defaults',
+      subscribe   => File['/etc/init.d/jmeter'],
+      refreshonly => true,
+    }
   }
 
   service { 'jmeter':
     ensure    => running,
     enable    => true,
-    require   => Exec['jmeter-update-rc'],
+    require   => File['/etc/init.d/jmeter'],
     subscribe => [File['/etc/init.d/jmeter'], Exec['install-jmeter-plugins']],
   }
 }
