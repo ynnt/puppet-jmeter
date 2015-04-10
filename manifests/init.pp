@@ -7,16 +7,18 @@
 #   class { 'jmeter': }
 #
 class jmeter(
-  $jmeter_version         = '2.9',
-  $jmeter_plugins_install = False,
-  $jmeter_plugins_version = '1.0.0',
+  $jmeter_version         = '2.13',
+  $jmeter_plugins_install = false,
+  $jmeter_plugins_version = '1.2.1',
+  $jmeter_plugins_set     = ['Standard'],
+  $java_version           = '7',
 ) {
 
   Exec { path => '/bin:/usr/bin:/usr/sbin' }
 
   $jdk_pkg = $::osfamily ? {
-    debian => 'openjdk-6-jre-headless',
-    redhat => 'java-1.6.0-openjdk'
+    debian => "openjdk-${java_version}-jre-headless",
+    redhat => "java-1.${java_version}.0-openjdk"
   }
 
   package { $jdk_pkg:
@@ -24,6 +26,10 @@ class jmeter(
   }
 
   package { 'unzip':
+    ensure => present,
+  }
+
+  package { 'wget':
     ensure => present,
   }
 
@@ -39,17 +45,30 @@ class jmeter(
     require => Exec['download-jmeter'],
   }
 
-  if $jmeter_plugins_install == True {  
-    exec { 'download-jmeter-plugins':
-      command => "wget -P /root http://jmeter-plugins.googlecode.com/files/JMeterPlugins-${jmeter_plugins_version}.zip",
-      creates => '/root/JMeterPlugins-${jmeter_plugins_version}.zip'
-    }
-
-    exec { 'install-jmeter-plugins':
-      command => "unzip -q -d JMeterPlugins JMeterPlugins-${jmeter_plugins_version}.zip && mv JMeterPlugins/JMeterPlugins.jar /usr/share/jmeter/lib/ext",
-      cwd     => '/root',
-      creates => '/usr/share/jmeter/lib/ext/JMeterPlugins.jar',
-      require => [Package['unzip'], Exec['install-jmeter'], Exec['download-jmeter-plugins']],
+  if $jmeter_plugins_install == true {  
+    jmeter::plugins_install { $jmeter_plugins_set:
+      plugins_version => $jmeter_plugins_version,
+      require         => [Package['wget'], Package['unzip'], Exec['install-jmeter']],
     }
   }
+}
+
+define jmeter::plugins_install (
+  $plugins_set = $title, 
+  $plugins_version) 
+{
+  $base_download_url = 'http://jmeter-plugins.org/downloads/file/'
+  $plugins_file_base = "JMeterPlugins-${plugins_set}-${plugins_version}"
+
+  exec { "download-jmeter-plugins-${plugins_set}":
+    command => "wget -P /root ${base_download_url}/${plugins_file_base}.zip",
+    creates => '/root/${plugins_file_base}.zip'
+  }
+
+  exec { "install-jmeter-plugins-${plugins_set}":
+    command => "unzip -q -o -d JMeterPlugins-${plugins_set} ${plugins_file_base}.zip && cp -r JMeterPlugins-${plugins_set}/lib/* /usr/share/jmeter/lib/",
+    cwd     => '/root',
+    creates => '/usr/share/jmeter/lib/ext/JMeterPlugins-${plugins_set}.jar',
+    require => Exec["download-jmeter-plugins-${plugins_set}"],
+  }  
 }

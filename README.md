@@ -1,7 +1,7 @@
 Puppet JMeter
 =============
 
-This class installs the latest stable version of JMeter (currently v2.9) from apache.org. If you use the `::server` class, an init-file will be added to `/etc/init.d` and JMeter will be started in server mode listening on the default port.
+This class installs the latest stable version of JMeter (currently v2.13) from apache.org. If you use the `::server` class, an init-file will be added to `/etc/init.d` and JMeter will be started in server mode listening on the default port.
 
 Both the `jmeter` and `jmeter::server` can optionally install the `jmeter-plugins` package which adds a lot of useful listeners, thread groups, etc.
 
@@ -15,12 +15,13 @@ Install JMeter:
 
     class { 'jmeter': }
 
-Install JMeter v2.6 and JMeterPlugins v0.5.6
+Install JMeter v2.13 including 'Standard' and 'Extras' set of [JMeterPlugins](http://jmeter-plugins.org/) v1.2.1
 
     class { 'jmeter':
-      jmeter_version            => '2.6',
-      jmeter_plugins_install    => True,
-      jmeter_plugins_version    => '0.5.6',
+      jmeter_version            => '2.13',
+      jmeter_plugins_install    => true,
+      jmeter_plugins_version    => '1.2.1',
+      jmeter_plugins_set        => ['Standard', 'Extras']
     }
 
 Install JMeter server using the default host-only IP address 0.0.0.0:
@@ -41,5 +42,5 @@ Morten Wulff
 <wulff@ratatosk.net>
 
 Dario Duvnjak   
-[@darioduvnjak](https://twitter.com/darioduvnjak)   
-[![r8networks logo](http://i.imgur.com/15kgvi0.png)](http://beta.r8network.com/)
+[@darioduvnjak](https://twitter.com/darioduvnjak)
+http://dtk.io/
