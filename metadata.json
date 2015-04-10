@@ -1,0 +1,14 @@
+{
+  "name": "dduvnjak/jmeter",
+  "version": "0.2.0",
+  "author": "dduvnjak",
+  "summary": "Module for JMeter configuration",
+  "license": "Apache 2.0",
+  "source": "https://github.com/dduvnjak/puppet-jmeter",
+  "project_page": "https://github.com/dduvnjak/puppet-jmeter",
+  "issues_url": "https://github.com/dduvnjak/puppet-jmeter/issues",
+  "dependencies": [
+    {"name":"puppetlabs-stdlib","version_requirement":">= 1.0.0"}
+  ]
+}
+
