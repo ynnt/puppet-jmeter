@@ -1,8 +1,0 @@
-name 'dduvnjak-jmeter'
-version '0.1.0'
-source 'git://github.com/dduvnjak/puppet-jmeter.git'
-author 'dduvnjak'
-license 'Apache 2.0'
-summary 'Puppet module for JMeter'
-description 'Module for JMeter configuration'
-project_page 'https://github.com/dduvnjak/puppet-jmeter'
