@@ -29,10 +29,17 @@ class jmeter::server($server_ip = '0.0.0.0') {
     }
   }
 
+  if $jmeter::jmeter_plugins_install == true {
+    $jmeter_subscribe = [File['/etc/init.d/jmeter'], Jmeter::Plugins_install[$jmeter::jmeter_plugins_set]]
+  }
+  else {
+    $jmeter_subscribe = [File['/etc/init.d/jmeter']]
+  }
+
   service { 'jmeter':
     ensure    => running,
     enable    => true,
     require   => File['/etc/init.d/jmeter'],
-    subscribe => [File['/etc/init.d/jmeter'], Exec['install-jmeter-plugins']],
+    subscribe => $jmeter_subscribe,
   }
 }
