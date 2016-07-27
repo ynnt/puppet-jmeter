@@ -35,12 +35,14 @@ Install JMeter server using a custom host-only IP address:
     }
 
 
+By default puppet-jmeter installs java, you can skip it by setting $java_version variable to 'None'
+
 Authors
 -------
 
-Morten Wulff  
+Morten Wulff
 <wulff@ratatosk.net>
 
-Dario Duvnjak   
+Dario Duvnjak
 [@dduvnyak](https://twitter.com/dduvnyak)
 http://dtk.io/
