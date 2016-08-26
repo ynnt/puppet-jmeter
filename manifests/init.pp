@@ -28,7 +28,7 @@ class jmeter (
   ensure_packaages($jdk_pkg)
   }
 
-  jmeter_dependencies = [ 'wget', 'unzip' ]
+  $jmeter_dependencies = [ 'wget', 'unzip' ]
   ensure_packages($jmeter_dependencies)
 
   exec { 'download-jmeter':
