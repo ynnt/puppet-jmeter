@@ -9,8 +9,8 @@
 
 class jmeter (
   $jmeter_version           = '2.13',
-  $jmeter_install_base_dir  = '/usr/share'
-  $jmeter_directory         = 'jmeter'
+  $jmeter_install_base_dir  = '/usr/share',
+  $jmeter_directory         = 'jmeter',
   $jmeter_plugins_install   = false,
   $jmeter_plugins_version   = '1.2.1',
   $jmeter_plugins_set       = ['Standard'],
