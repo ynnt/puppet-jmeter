@@ -9,8 +9,8 @@
 
 class jmeter (
   $jmeter_version           = '2.13',
-  $jmeter_install_base_dir  = '/usr/share'
-  $jmeter_directory         = 'jmeter'
+  $jmeter_install_base_dir  = '/usr/share',
+  $jmeter_directory         = 'jmeter',
   $jmeter_plugins_install   = false,
   $jmeter_plugins_version   = '1.2.1',
   $jmeter_plugins_set       = ['Standard'],
@@ -47,7 +47,7 @@ class jmeter (
   if $jmeter_plugins_install == true {
     jmeter::plugins_install { $jmeter_plugins_set:
       plugins_version => $jmeter_plugins_version,
-      jmeter_lib_path => "${jmeter_install_base_dir}/${jmeter_directory}/lib"
+      jmeter_lib_path => "${jmeter_install_base_dir}/${jmeter_directory}/lib",
       require         => [Package['wget'], Package['unzip'], Exec['install-jmeter']],
     }
   }
