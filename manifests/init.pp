@@ -38,7 +38,7 @@ class jmeter (
   }
 
   exec { 'install-jmeter':
-    command => "tar xzf /root/apache-jmeter-${jmeter_version}.tgz && mv apache-jmeter-${jmeter_version} ${jmeter_dependencies}",
+    command => "tar xzf /root/apache-jmeter-${jmeter_version}.tgz && mv apache-jmeter-${jmeter_version} ${jmeter_install_base_dir}/${jmeter_directory}",
     cwd     => "$jmeter_install_base_dir",
     creates => "${jmeter_install_base_dir}/${jmeter_directory}",
     require => Exec['download-jmeter'],
