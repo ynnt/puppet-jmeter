@@ -25,7 +25,7 @@ class jmeter (
       redhat => "java-1.${java_version}.0-openjdk"
     }
 
-  ensure_packaages($jdk_pkg)
+  ensure_packages($jdk_pkg)
   }
 
   $jmeter_dependencies = [ 'wget', 'unzip' ]
