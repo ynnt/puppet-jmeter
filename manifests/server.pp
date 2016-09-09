@@ -9,6 +9,9 @@
 class jmeter::server($server_ip = '0.0.0.0') {
   include jmeter
 
+  $jmeter_install_base_dir = $jmeter::jmeter_install_base_dir
+  $jmeter_directory        = $jmeter::jmeter_directory
+
   $init_template = $::osfamily ? {
     debian => 'jmeter/jmeter-init.erb',
     redhat => 'jmeter/jmeter-init.redhat.erb'
